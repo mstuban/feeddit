@@ -1,41 +1,97 @@
 <div ng-cloak>
     <div class="row">
-        <div class="col-md-4">
-            <span class="hipster img-responsive img-rounded"></span>
-        </div>
-        <div class="col-md-8">
-            <h1 data-translate="home.title">Welcome, Java Hipster!</h1>
-            <p class="lead" data-translate="home.subtitle">This is your homepage</p>
+        <div class="text-center col-md-12">
+            <h1 data-translate="home.title">Welcome to feeddit!</h1>
+
+          <!--  <div ng-show="loggedOut">
+                <div class="alert alert-success">
+                    You have successfully logged out!
+                </div>
+            </div>-->
 
             <div ng-switch="vm.isAuthenticated()">
-                <div class="alert alert-success" ng-switch-when="true" data-translate="home.logged.message" translate-values="{username: '{{vm.account.login}}'}">
-                    You are logged in as user "{{vm.account.login}}".
-                </div>
-
-                <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.authenticated" translate-compile>
-                    If you want to <a class="alert-link" href="" ng-click="vm.login()">sign in</a>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").
-                </div>
-
                 <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.register" translate-compile>
                     You don't have an account yet? <a class="alert-link" ui-sref="register">Register a new account</a>
                 </div>
             </div>
 
-            <p data-translate="home.question">
-                If you have any question on JHipster:
-            </p>
+            <span ui-sref-active="active">
+                <a href="" ng-hide="vm.isAuthenticated()" ng-click="vm.login()" id="login">
+                    <span class="glyphicon glyphicon-log-in"></span>&nbsp;
+                    <span data-translate="global.menu.account.login">Sign in</span>
+                </a>
+            </span>
 
-            <ul>
-                <li><a href="http://jhipster.github.io/" target="_blank" data-translate="home.link.homepage">JHipster homepage</a></li>
-                <li><a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" data-translate="home.link.stackoverflow">JHipster on Stack Overflow</a></li>
-                <li><a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" data-translate="home.link.bugtracker">JHipster bug tracker</a></li>
-                <li><a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" data-translate="home.link.chat">JHipster public chat room</a></li>
-                <li><a href="https://twitter.com/java_hipster" target="_blank"  data-translate="home.link.follow">follow @java_hipster on Twitter</a></li>
-            </ul>
+            <div ng-show="vm.isAuthenticated()">
+                <h2 data-translate="feedditApp.post.home.title" translate-compile>Posts</h2>
+                <jhi-alert></jhi-alert>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-4 text-left">
+                            <button class="btn btn-primary" ui-sref="post.new" >
+                                <span class="glyphicon glyphicon-plus"></span>
+                                <span data-translate="feedditApp.post.home.createLabel">
+                        Create new Post
+                    </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br/>
 
-            <p>
-             <span data-translate="home.like">If you like JHipster, don't forget to give us a star on </span>&nbsp;<a href="https://github.com/jhipster/generator-jhipster" target="_blank" data-translate="home.github">Github</a>!
-            </p>
+                <form name="editForm" role="form" novalidate ng-submit="vm.save()">
+                <div class="table-responsive">
+                    <table class="jh-table table table-striped">
+                        <tbody>
+                        <tr ng-repeat="post in vm.posts track by post.id">
+
+                            <td>{{post.numberOfUpvotes}}</td>
+                            <td>
+                                <a href="{{post.postURL}}">{{post.headline}}</a>
+                                <br/>
+                                {{post.authorName}}
+                            </td>
+                            <td>
+                                <span class="glyphicon glyphicon-hand-up"></span>
+                                <span class="glyphicon glyphicon-hand-down"></span>
+                            </td>
+
+                            <!--<td class="text-right">
+                                <div class="btn-group flex-btn-group-container">
+                                    <button type="submit"
+                                            ui-sref="post-detail({id:post.id})"
+                                            class="btn btn-info btn-sm">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                        <span class="hidden-sm-down" data-translate="entity.action.view"></span>
+                                    </button>
+                                    <button type="submit"
+                                            ui-sref="post.edit({id:post.id})"
+                                            class="btn btn-primary btn-sm">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                        <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
+                                    </button>
+                                    <button type="submit"
+                                            ui-sref="post.delete({id:post.id})"
+                                            class="btn btn-danger btn-sm">
+                                        <span class="glyphicon glyphicon-remove-circle"></span>
+                                        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
+                                    </button>
+                                </div>
+                            </td>-->
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                  <!--  <div class="form-group">
+                        <label class="control-label" data-translate="feedditApp.post.numberOfUpvotes" for="field_numberOfUpvotes">Number Of Upvotes</label>
+                        <input type="number" class="form-control" name="numberOfUpvotes" id="field_numberOfUpvotes"
+                               ng-model="vm.post.numberOfUpvotes"
+                        />
+                    </div>-->
+                </form>
+            </div>
+
+
         </div>
     </div>
 </div>

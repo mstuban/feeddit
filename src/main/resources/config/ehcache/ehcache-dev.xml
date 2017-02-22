@@ -20,5 +20,7 @@
 
     <cache alias="com.ag04.feeddit.domain.User.persistentTokens" uses-template="simple"/>
 
+    <cache alias="com.ag04.feeddit.domain.Post" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

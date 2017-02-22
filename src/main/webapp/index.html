@@ -22,16 +22,18 @@
     <!--[if lt IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
+<!--
     <page-ribbon></page-ribbon>
+-->
     <div ui-view="navbar" ng-cloak></div>
     <div class="container">
         <div class="well" ui-view="content">
             <!-- Angular views -->
         </div>
 
-        <div class="footer" ng-cloak>
+     <!--   <div class="footer" ng-cloak>
             <p data-translate="footer">This is your footer</p>
-        </div>
+        </div>-->
     </div>
 
     <!-- Google Analytics: uncomment and change UA-XXXXX-X to be your site's ID.
@@ -93,6 +95,12 @@
     <script src="app/layouts/error/error.state.js"></script>
     <script src="app/home/home.state.js"></script>
     <script src="app/home/home.controller.js"></script>
+    <script src="app/entities/post/post-dialog.controller.js"></script>
+    <script src="app/entities/post/post-detail.controller.js"></script>
+    <script src="app/entities/post/post-delete-dialog.controller.js"></script>
+    <script src="app/entities/post/post.state.js"></script>
+    <script src="app/entities/post/post.service.js"></script>
+    <script src="app/entities/post/post.controller.js"></script>
     <script src="app/entities/entity.state.js"></script>
     <script src="app/components/util/truncate-words.filter.js"></script>
     <script src="app/components/util/truncate-characters.filter.js"></script>

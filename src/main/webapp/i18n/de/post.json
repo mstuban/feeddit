@@ -1,0 +1,26 @@
+{
+    "feedditApp": {
+        "post" : {
+            "home": {
+                "title": "Posts",
+                "createLabel": "Post erstellen",
+                "createOrEditLabel": "Post erstellen oder bearbeiten"
+            },
+            "created": "Post erstellt mit ID {{ param }}",
+            "updated": "Post aktualisiert mit ID {{ param }}",
+            "deleted": "Post gelöscht mit ID {{ param }}",
+            "delete": {
+                "question": "Soll Post {{ id }} wirklich dauerhaft gelöscht werden?"
+            },
+            "detail": {
+                "title": "Post"
+            },
+            "submitDate": "Submit Date",
+            "authorID": "Author ID",
+            "headline": "Headline",
+            "postURL": "Post URL",
+            "authorName": "Author Name",
+            "numberOfUpvotes": "Number Of Upvotes"
+        }
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "submitDate",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "authorID",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "headline",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "postURL",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "authorName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "numberOfUpvotes",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20170221193429",
+    "entityTableName": "post",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no"
+}
