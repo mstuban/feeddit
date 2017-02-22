@@ -5,10 +5,12 @@
         .module('feedditApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['Post', '$scope', 'Principal', 'LoginService', '$state'];
+    HomeController.$inject = ['Post', '$scope', '$stateParams', 'Principal', 'LoginService', '$state'];
 
-    function HomeController (Post, $scope, Principal, LoginService, $state) {
+    function HomeController (Post, $scope, $stateParams, Principal, LoginService, $state) {
         var vm = this;
+
+        $scope.loggedOut = $stateParams.loggedOut;
 
         vm.account = null;
         vm.isAuthenticated = null;
@@ -17,7 +19,17 @@
         vm.register = register;
         $scope.$on('authenticationSuccess', function() {
             getAccount();
+            loadAll();
         });
+
+        loadAll();
+
+        function loadAll() {
+            Post.query(function(result) {
+                vm.posts = result;
+                vm.searchQuery = null;
+            });
+        }
 
         getAccount();
 
@@ -36,13 +48,5 @@
             LoginService.open();
         }
 
-        loadAll();
-
-        function loadAll() {
-            Post.query(function(result) {
-                vm.posts = result;
-                vm.searchQuery = null;
-            });
-        }
     }
 })();

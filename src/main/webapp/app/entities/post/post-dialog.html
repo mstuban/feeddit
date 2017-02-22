@@ -1,10 +1,12 @@
 
-<form name="editForm" role="form" novalidate ng-submit="vm.save()">
+<form name="editForm" role="form" novalidate ng-submit="vm.save(editForm.$valid)">
+
+
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myPostLabel" data-translate="feedditApp.post.home.createOrEditLabel">Create or edit a Post</h4>
+        <h4 class="modal-title" id="myPostLabel" data-translate="home.createOrEditLabel">Create or edit a Post</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
@@ -14,46 +16,54 @@
                     ng-model="vm.post.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.submitDate" for="field_submitDate">Submit Date</label>
+            <label class="control-label" data-translate="post.submitDate" for="field_submitDate">Submit Date</label>
                 <div class="input-group">
-                    <input id="field_submitDate" type="text" class="form-control" name="submitDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.post.submitDate" is-open="vm.datePickerOpenStatus.submitDate"
+                    <input id="field_submitDate" type="text" class="form-control" name="submitDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.submitDate" is-open="vm.datePickerOpenStatus.submitDate" disabled
                     />
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="vm.openCalendar('submitDate')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
+
         <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.authorID" for="field_authorID">Author ID</label>
-            <input type="number" class="form-control" name="authorID" id="field_authorID"
-                    ng-model="vm.post.authorID"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.headline" for="field_headline">Headline</label>
-            <input type="text" class="form-control" name="headline" id="field_headline"
-                    ng-model="vm.post.headline"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.postURL" for="field_postURL">Post URL</label>
-            <input type="text" class="form-control" name="postURL" id="field_postURL"
-                    ng-model="vm.post.postURL"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.authorName" for="field_authorName">Author Name</label>
-            <input type="text" class="form-control" name="authorName" id="field_authorName"
-                    ng-model="vm.post.authorName"
-                    />
-        </div>
-        <div class="form-group">
-            <label class="control-label" data-translate="feedditApp.post.numberOfUpvotes" for="field_numberOfUpvotes">Number Of Upvotes</label>
+            <label class="control-label" data-translate="post.numberOfUpvotes" for="field_numberOfUpvotes">Vote #</label>
             <input type="number" class="form-control" name="numberOfUpvotes" id="field_numberOfUpvotes"
-                    ng-model="vm.post.numberOfUpvotes"
+                   ng-model="vm.post.numberOfUpvotes" ng-init="vm.post.numberOfUpvotes=0" disabled
+            />
+        </div>
+
+        <div class="form-group" ng-hide="true">
+            <label class="control-label" data-translate="post.authorID" for="field_authorID">Author ID</label>
+            <input type="number" class="form-control" name="authorID" id="field_authorID"
+                    ng-model="vm.authorID" disabled
                     />
         </div>
 
+        <div class="form-group">
+            <label class="control-label" data-translate="post.authorName" for="field_authorName">Author Name</label>
+            <input type="text" class="form-control" name="authorName" id="field_authorName"
+                   ng-model="vm.authorName" disabled
+            />
+        </div>
+
+        <span class="col-md-12 alert alert-danger" ng-show="editForm.headline.$touched && editForm.headline.$pristine">The headline is required.</span>
+
+        <div class="form-group">
+            <label class="control-label" data-translate="post.headline" for="field_headline">Headline</label> <span class="text-danger"> * </span>
+            <input type="text" class="form-control" name="headline" id="field_headline"
+                    ng-model="vm.post.headline" required
+                    />
+        </div>
+
+        <span class="col-md-12 alert alert-danger" ng-show="editForm.postURL.$touched && editForm.postURL.$pristine">The post URL is required.</span>
+
+        <div class="form-group">
+            <label class="control-label" data-translate="post.postURL" for="field_postURL">Post URL</label> <span class="text-danger"> * </span>
+            <input type="text" class="form-control" name="postURL" id="field_postURL"
+                    ng-model="vm.post.postURL" required
+                    />
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">

@@ -10,6 +10,7 @@
     function PostDetailController($scope, $rootScope, $stateParams, previousState, entity, Post) {
         var vm = this;
 
+        vm.authorID =
         vm.post = entity;
         vm.previousState = previousState.name;
 

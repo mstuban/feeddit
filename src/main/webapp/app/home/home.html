@@ -1,13 +1,11 @@
 <div ng-cloak>
     <div class="row">
         <div class="text-center col-md-12">
-            <h1 data-translate="home.title">Welcome to feeddit!</h1>
+            <h1 ng-hide="vm.isAuthenticated()" data-translate="home.title">Welcome to feeddit!</h1>
 
-          <!--  <div ng-show="loggedOut">
-                <div class="alert alert-success">
+            <div ng-if="loggedOut" class="alert alert-success">
                     You have successfully logged out!
-                </div>
-            </div>-->
+            </div>
 
             <div ng-switch="vm.isAuthenticated()">
                 <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.register" translate-compile>
@@ -22,15 +20,14 @@
                 </a>
             </span>
 
-            <div ng-show="vm.isAuthenticated()">
-                <h2 data-translate="feedditApp.post.home.title" translate-compile>Posts</h2>
+            <div ng-show="vm.isAuthenticated() && vm.posts.length > 0">
                 <jhi-alert></jhi-alert>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xs-4 text-left">
-                            <button class="btn btn-primary" ui-sref="post.new" >
+                            <button class="btn btn-primary" ui-sref="home.new" >
                                 <span class="glyphicon glyphicon-plus"></span>
-                                <span data-translate="feedditApp.post.home.createLabel">
+                                <span data-translate="post.home.createLabel">
                         Create new Post
                     </span>
                             </button>
@@ -39,9 +36,8 @@
                 </div>
                 <br/>
 
-                <form name="editForm" role="form" novalidate ng-submit="vm.save()">
-                <div class="table-responsive">
-                    <table class="jh-table table table-striped">
+                <di v class="table-responsive">
+                    <table class="jh-table table">
                         <tbody>
                         <tr ng-repeat="post in vm.posts track by post.id">
 
@@ -88,10 +84,10 @@
                                ng-model="vm.post.numberOfUpvotes"
                         />
                     </div>-->
-                </form>
             </div>
 
-
-        </div>
+            <span ng-show="vm.posts.length == 0 && vm.isAuthenticated()">
+                No posts added yet!
+            </span>
     </div>
 </div>

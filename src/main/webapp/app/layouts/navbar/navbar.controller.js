@@ -47,7 +47,7 @@
             collapseNavbar();
             Auth.logout();
             vm.account.login = "";
-            $state.go('home');
+            $state.go('home', {loggedOut: true});
         }
 
         function toggleNavbar() {

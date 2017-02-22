@@ -5,9 +5,9 @@
         .module('feedditApp')
         .controller('PostDialogController', PostDialogController);
 
-    PostDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Post'];
+    PostDialogController.$inject = ['$timeout', '$scope', '$state', 'Auth', '$stateParams', 'Principal', '$uibModalInstance', 'entity', 'Post'];
 
-    function PostDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Post) {
+    function PostDialogController ($timeout, $scope, $state, Auth, $stateParams, Principal, $uibModalInstance, entity, Post) {
         var vm = this;
 
         vm.post = entity;
@@ -15,6 +15,21 @@
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
         vm.save = save;
+        vm.authorID = null;
+        vm.submitDate = new Date();
+
+        getAccount();
+
+        function getAccount() {
+            Principal.identity().then(function(account) {
+                vm.account = account;
+                vm.authorID = account.id;
+                vm.authorName = account.login;
+                vm.isAuthenticated = Principal.isAuthenticated;
+            });
+        }
+
+
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -26,6 +41,11 @@
 
         function save () {
             vm.isSaving = true;
+
+            vm.post.submitDate = vm.submitDate;
+            vm.post.authorID = vm.authorID;
+            vm.post.authorName = vm.authorName;
+
             if (vm.post.id !== null) {
                 Post.update(vm.post, onSaveSuccess, onSaveError);
             } else {
