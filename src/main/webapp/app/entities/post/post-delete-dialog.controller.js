@@ -1,9 +1,9 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('feedditApp')
-        .controller('PostDeleteController',PostDeleteController);
+        .controller('PostDeleteController', PostDeleteController);
 
     PostDeleteController.$inject = ['$uibModalInstance', 'entity', 'Post'];
 
@@ -14,11 +14,11 @@
         vm.clear = clear;
         vm.confirmDelete = confirmDelete;
 
-        function clear () {
+        function clear() {
             $uibModalInstance.dismiss('cancel');
         }
 
-        function confirmDelete (id) {
+        function confirmDelete(id) {
             Post.delete({id: id},
                 function () {
                     $uibModalInstance.close(true);

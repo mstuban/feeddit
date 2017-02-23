@@ -1,14 +1,20 @@
 package com.ag04.feeddit.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import com.ag04.feeddit.domain.Post;
-
+import com.ag04.feeddit.domain.User;
 import com.ag04.feeddit.repository.PostRepository;
+import com.ag04.feeddit.repository.UserRepository;
 import com.ag04.feeddit.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,11 +32,12 @@ public class PostResource {
     private final Logger log = LoggerFactory.getLogger(PostResource.class);
 
     private static final String ENTITY_NAME = "post";
-        
+
     private final PostRepository postRepository;
 
-    public PostResource(PostRepository postRepository) {
+    PostResource(PostRepository postRepository) {
         this.postRepository = postRepository;
+
     }
 
     /**
@@ -80,6 +87,35 @@ public class PostResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of posts in body
      */
+    @GetMapping("currentUser/posts")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @Timed
+    public List<Post> getAllUserPosts() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return postRepository.findAllByAuthorName(authentication.getName());
+    }
+
+    @GetMapping("currentUser/posts/{id}")
+    @Timed
+    public ResponseEntity<Post> getCurrentUserPostById(@PathVariable Long id) {
+        log.debug("REST request to get Post : {}", id);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Post post = postRepository.findOne(id);
+
+        if (post != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+            return ResponseUtil.wrapOrNotFound(Optional.of(post));
+        }
+
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+
+    /**
+     * GET  /posts : get all the posts.
+     *
+     * @return the ResponseEntity with status 200 (OK) and the list of posts in body
+     */
     @GetMapping("/posts")
     @Timed
     public List<Post> getAllPosts() {
@@ -102,17 +138,19 @@ public class PostResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(post));
     }
 
-    /**
-     * DELETE  /posts/:id : delete the "id" post.
-     *
-     * @param id the id of the post to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/posts/{id}")
+    @DeleteMapping("currentUser/posts/{id}")
     @Timed
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUserPostById(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
-        postRepository.delete(id);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Post post = postRepository.findOne(id);
+
+        if (post != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+            postRepository.delete(id);
+        }
+
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -11,10 +11,10 @@
         var vm = this;
 
         vm.authorID =
-        vm.post = entity;
+            vm.post = entity;
         vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('feedditApp:postUpdate', function(event, result) {
+        var unsubscribe = $rootScope.$on('feedditApp:postUpdate', function (event, result) {
             vm.post = result;
         });
         $scope.$on('$destroy', unsubscribe);
