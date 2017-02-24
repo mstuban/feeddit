@@ -5,9 +5,9 @@
         .module('feedditApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['Post', '$scope', '$stateParams', 'Principal', 'LoginService', '$state'];
+    HomeController.$inject = ['PostAdmin', '$scope', '$stateParams', 'Principal', 'LoginService', '$state'];
 
-    function HomeController (Post, $scope, $stateParams, Principal, LoginService, $state) {
+    function HomeController (PostAdmin, $scope, $stateParams, Principal, LoginService, $state) {
         var vm = this;
 
         $scope.loggedOut = $stateParams.loggedOut;
@@ -25,7 +25,7 @@
         loadAll();
 
         function loadAll() {
-            Post.query(function(result) {
+            PostAdmin.query(function(result) {
                 vm.posts = result;
                 vm.searchQuery = null;
             });

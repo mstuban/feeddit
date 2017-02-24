@@ -1,16 +1,20 @@
-(function() {
+/**
+ * Created by marko on 23.02.17..
+ */
+(function () {
     'use strict';
     angular
         .module('feedditApp')
-        .factory('Post', Post);
+        .factory('PostAdmin', PostAdmin);
 
-    Post.$inject = ['$resource', 'DateUtils'];
+    PostAdmin.$inject = ['$resource', 'DateUtils'];
 
-    function Post ($resource, DateUtils) {
-        var resourceUrl =  'api/currentUser/posts/:id';
+    function PostAdmin($resource, DateUtils) {
+
+        var resourceUrl = 'api/posts/:id';
 
         return $resource(resourceUrl, {}, {
-            'query': { method: 'GET', isArray: true},
+            'query': {method: 'GET', isArray: true},
             'get': {
                 method: 'GET',
                 transformResponse: function (data) {

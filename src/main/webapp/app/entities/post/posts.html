@@ -14,31 +14,6 @@
             </div>
         </div>-->
     <br/>
-    <div class="table-responsive" has-authority="ROLE_ADMIN">
-        <table class="jh-table table">
-            <tbody>
-            <tr ng-repeat="post in vm.posts track by post.id">
-
-                <td>{{post.numberOfUpvotes}}</td>
-                <td>
-                    <a href="{{post.postURL}}">{{post.headline}}</a>
-                    <br/>
-                    {{post.authorName}}
-                </td>
-                <td>
-                    <button type="submit"
-                            ui-sref="post.delete({id:post.id})"
-                            class="btn btn-danger btn-sm">
-                        <span class="glyphicon glyphicon-remove-circle"></span>
-                        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-
-    </div>
     <div class="table-responsive">
         <table class="jh-table table">
             <tbody>

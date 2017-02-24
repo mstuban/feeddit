@@ -47,7 +47,7 @@ public class PostResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new post, or with status 400 (Bad Request) if the post has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/posts")
+    @PostMapping("currentUser/posts")
     @Timed
     public ResponseEntity<Post> createPost(@RequestBody Post post) throws URISyntaxException {
         log.debug("REST request to save Post : {}", post);
@@ -55,10 +55,12 @@ public class PostResource {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new post cannot already have an ID")).body(null);
         }
         Post result = postRepository.save(post);
-        return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
+        return ResponseEntity.created(new URI("/api/currentUser/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
+
+
 
     /**
      * PUT  /posts : Updates an existing post.
@@ -82,11 +84,14 @@ public class PostResource {
             .body(result);
     }
 
-    /**
+
+
+/**
      * GET  /posts : get all the posts.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of posts in body
      */
+
     @GetMapping("currentUser/posts")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @Timed
@@ -94,6 +99,7 @@ public class PostResource {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return postRepository.findAllByAuthorName(authentication.getName());
     }
+
 
     @GetMapping("currentUser/posts/{id}")
     @Timed
