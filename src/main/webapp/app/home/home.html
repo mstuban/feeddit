@@ -3,12 +3,21 @@
         <div class="text-center col-md-12">
             <h1 ng-hide="vm.isAuthenticated()" data-translate="home.title">Welcome to feeddit!</h1>
 
-            <div ng-if="loggedOut" class="alert alert-success">
-                    You have successfully logged out!
-            </div>
+            <alert ng-if="loggedOut" class="col-md-12 alert alert-success" dismiss-on-timeout="2000">
+                You have successfully logged out!
+            </alert>
+
+            <alert ng-if="downVoted" class="col-md-12 alert alert-success" dismiss-on-timeout="2000" class="alert alert-success">
+                Post downvoted!
+            </alert>
+
+            <alert ng-if="upVoted" class="col-md-12 alert alert-success" dismiss-on-timeout="2000" class="alert alert-success">
+                Post upvoted!
+            </alert>
 
             <div ng-switch="vm.isAuthenticated()">
-                <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.register" translate-compile>
+                <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.register"
+                     translate-compile>
                     You don't have an account yet? <a class="alert-link" ui-sref="register">Register a new account</a>
                 </div>
             </div>
@@ -20,12 +29,11 @@
                 </a>
             </span>
 
-            <div ng-show="vm.isAuthenticated() && vm.posts.length > 0">
-                <jhi-alert></jhi-alert>
+            <div ng-show="vm.isAuthenticated()">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-xs-4 text-left">
-                            <button class="btn btn-primary" ui-sref="home.new" >
+                            <button class="btn btn-primary" ui-sref="home.new">
                                 <span class="glyphicon glyphicon-plus"></span>
                                 <span data-translate="post.home.createLabel">
                         Create new Post
@@ -36,10 +44,35 @@
                 </div>
                 <br/>
 
-                <di v class="table-responsive">
+                <div ng-show="vm.isAuthenticated() && vm.posts.length > 0" class="table-responsive">
+                    <form class="form-inline">
+                        <div class="col-xs-2 form-group">
+                            <input type="text" ng-model="search" class="form-control" placeholder="Search">
+                        </div>
+                    </form>
                     <table class="jh-table table">
+                        <thead>
+                        <tr>
+                            <th class="text-center" ng-click="sort('numberOfUpvotes')">Upvotes
+                                <span class="glyphicon sort-icon" ng-show="sortKey=='numberOfUpvotes'"
+                                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th class="text-center" ng-click="sort('headline')">Headline
+                                <span class="glyphicon sort-icon" ng-show="sortKey=='headline'"
+                                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                            <th class="text-center">
+                                <select ng-model="items">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </th>
+                        </tr>
+                        </thead>
                         <tbody>
-                        <tr ng-repeat="post in vm.posts track by post.id">
+                        <tr dir-paginate="post in vm.posts|orderBy:sortKey:reverse|filter:search|itemsPerPage:items">
 
                             <td>{{post.numberOfUpvotes}}</td>
                             <td>
@@ -47,10 +80,12 @@
                                 <br/>
                                 {{post.authorName}}
                             </td>
-                            <td>
-                                <span class="glyphicon glyphicon-hand-up"></span>
-                                <span class="glyphicon glyphicon-hand-down"></span>
-                            </td>
+                            <div>
+                                    <td>
+                                        <a ng-click="upVote(post.id)" class="glyphicon glyphicon-hand-up"></a>
+                                        <a ng-click="downVote(post.id)" class="glyphicon glyphicon-hand-down"></a>
+                                    </td>
+                            </div>
 
                             <!--<td class="text-right">
                                 <div class="btn-group flex-btn-group-container">
@@ -77,17 +112,21 @@
                         </tr>
                         </tbody>
                     </table>
+                    <dir-pagination-controls
+                        template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"
+                        max-size="itemsPerPage">
+                    </dir-pagination-controls>
                 </div>
-                  <!--  <div class="form-group">
-                        <label class="control-label" data-translate="feedditApp.post.numberOfUpvotes" for="field_numberOfUpvotes">Number Of Upvotes</label>
-                        <input type="number" class="form-control" name="numberOfUpvotes" id="field_numberOfUpvotes"
-                               ng-model="vm.post.numberOfUpvotes"
-                        />
-                    </div>-->
+                <!--  <div class="form-group">
+                      <label class="control-label" data-translate="feedditApp.post.numberOfUpvotes" for="field_numberOfUpvotes">Number Of Upvotes</label>
+                      <input type="number" class="form-control" name="numberOfUpvotes" id="field_numberOfUpvotes"
+                             ng-model="vm.post.numberOfUpvotes"
+                      />
+                  </div>-->
             </div>
 
-            <span ng-show="vm.posts.length == 0 && vm.isAuthenticated()">
+            <span class="col-md-12 alert alert-danger" ng-show="vm.showNoPostsMessage">
                 No posts added yet!
             </span>
+        </div>
     </div>
-</div>

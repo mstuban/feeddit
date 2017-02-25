@@ -1,0 +1,4 @@
+<div class="range-label">Displaying {{ range.lower }} - {{ range.upper }} of {{ range.total }}</div>
+
+<a href="" title="Previous page" ng-class="{ disabled : pagination.current == 1 }" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a>
+<a href="" title="Next page"  ng-class="{ disabled : pagination.current == pagination.last }" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a>

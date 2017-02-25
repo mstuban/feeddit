@@ -329,6 +329,13 @@ ui bootstrap tweaks
     outline: none;
 }
 
+.glyphicon-hand-up{
+    font-size: 30px;
+}
+.glyphicon-hand-down{
+    font-size: 30px;
+}
+
 
 
 /* jhipster-needle-css-add-main JHipster will add new css style */

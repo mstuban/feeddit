@@ -22,7 +22,7 @@
                 </li>
                 <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
 
-                    <li ui-sref-active="active">
+                    <li ng-show="vm.isAuthenticated()" ui-sref-active="active">
                         <a ui-sref="post" ng-click="vm.collapseNavbar()">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;
                             <span>Posts</span>

@@ -1,6 +1,8 @@
 <div>
     <h2 data-translate="feedditApp.post.home.title">Posts</h2>
-    <jhi-alert></jhi-alert>
+    <span class="col-md-12 alert alert-danger" ng-show="vm.showNoPostsMessage">
+                No posts added yet!
+    </span>
     <!--    <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-4 no-padding-left">
@@ -14,7 +16,14 @@
             </div>
         </div>-->
     <br/>
-    <div class="table-responsive">
+    <br/>
+
+    <div class="table-responsive" ng-show="vm.posts.length > 0">
+        <td>
+            <button ng-show="vm.isAnyCheckboxSelected" class="btn btn-danger" ng-click="vm.deletePostsByIdArray()">Delete selected</button>
+            <br/>
+            <br/>
+        </td>
         <table class="jh-table table">
             <tbody>
             <tr ng-repeat="post in vm.posts track by post.id">
@@ -26,12 +35,7 @@
                     {{post.authorName}}
                 </td>
                 <td>
-                    <button type="submit"
-                            ui-sref="post.delete({id:post.id})"
-                            class="btn btn-danger btn-sm">
-                        <span class="glyphicon glyphicon-remove-circle"></span>
-                        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
-                    </button>
+                    <input type="checkbox" ng-click="vm.addToIdArray(post.id)">
                 </td>
             </tr>
             </tbody>

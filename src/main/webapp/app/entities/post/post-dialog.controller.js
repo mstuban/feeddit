@@ -52,6 +52,20 @@
             }
         }
 
+         function updateUpvotes() {
+            vm.isSaving = true;
+
+            vm.post.numberOfUpvotes = vm.numberOfUpvotes;
+
+            if (vm.post.id !== null) {
+                Post.update(vm.post, onSaveSuccess, onSaveError);
+            } else {
+                Post.save(vm.post, onSaveSuccess, onSaveError);
+            }
+        }
+
+
+
         function onSaveSuccess(result) {
             $scope.$emit('feedditApp:postUpdate', result);
             $uibModalInstance.close(result);

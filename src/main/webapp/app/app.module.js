@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -16,7 +16,8 @@
             'ui.router',
             'infinite-scroll',
             // jhipster-needle-angularjs-add-module JHipster will add new module here
-            'angular-loading-bar'
+            'angular-loading-bar',
+            'angularUtils.directives.dirPagination'
         ])
         .run(run);
 

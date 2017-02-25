@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -61,7 +62,6 @@ public class PostResource {
     }
 
 
-
     /**
      * PUT  /posts : Updates an existing post.
      *
@@ -84,9 +84,37 @@ public class PostResource {
             .body(result);
     }
 
+    @PutMapping("/posts/{id}/upVote")
+    @Timed
+    public ResponseEntity<Post> upVotePost(@PathVariable Long id) throws URISyntaxException {
+
+        Post post = postRepository.findOne(id);
+
+        post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
+
+        Post result = postRepository.save(post);
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
+            .body(result);
+    }
+
+    @PutMapping("/posts/{id}/downVote")
+    @Timed
+    public ResponseEntity<Post> downVotePost(@PathVariable Long id) throws URISyntaxException {
+
+        Post post = postRepository.findOne(id);
+
+        post.setNumberOfUpvotes(post.getNumberOfUpvotes() - 1);
+
+        Post result = postRepository.save(post);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
+            .body(result);
+    }
 
 
-/**
+    /**
      * GET  /posts : get all the posts.
      *
      * @return the ResponseEntity with status 200 (OK) and the list of posts in body
@@ -144,20 +172,29 @@ public class PostResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(post));
     }
 
-    @DeleteMapping("currentUser/posts/{id}")
+    @DeleteMapping("currentUser/posts/{idArray}")
     @Timed
-    public ResponseEntity<Void> deleteUserPostById(@PathVariable Long id) {
-        log.debug("REST request to delete Post : {}", id);
+    public ResponseEntity<Void> deleteUserPostsById(@PathVariable List<Long> idArray) {
+
+        System.out.println(idArray);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Post post = postRepository.findOne(id);
 
-        if (post != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
-            postRepository.delete(id);
+        List<Post> posts = postRepository.findAll();
+
+        for (Post post : posts) {
+            for (Long postId : idArray) {
+                if (Objects.equals(post.getId(), postId)) {
+                    Post postToBeDeleted = postRepository.findOne(postId);
+                    if (postToBeDeleted != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+                        postRepository.delete(postId);
+                    }
+                }
+            }
         }
 
 
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, idArray.toString())).build();
     }
 
 }

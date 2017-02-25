@@ -13,9 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.time.ZonedDateTime;
 
 /**
@@ -81,6 +79,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "reset_date")
     private ZonedDateTime resetDate = null;
+
+    @Column(name = "upvoted_posts_ids")
+    @ElementCollection
+    private Set<Long> upvotedPostsIds = new HashSet<>();
+
+    @Column(name = "downvoted_posts_ids")
+    @ElementCollection
+    private Set<Long> downvotedPostsIds = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -208,6 +214,22 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setPersistentTokens(Set<PersistentToken> persistentTokens) {
         this.persistentTokens = persistentTokens;
+    }
+
+    public Set<Long> getUpvotedPostsIds() {
+        return upvotedPostsIds;
+    }
+
+    public void setUpvotedPostsIds(Set<Long> upvotedPostsIds) {
+        this.upvotedPostsIds = upvotedPostsIds;
+    }
+
+    public Set<Long> getDownvotedPostsIds() {
+        return downvotedPostsIds;
+    }
+
+    public void setDownvotedPostsIds(Set<Long> downvotedPostsIds) {
+        this.downvotedPostsIds = downvotedPostsIds;
     }
 
     @Override

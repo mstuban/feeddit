@@ -12,7 +12,8 @@
             parent: 'app',
             url: '/',
             data: {
-                authorities: []
+                authorities: [],
+                editedPost : {}
             },
             views: {
                 'content@': {
@@ -26,6 +27,9 @@
                     $translatePartialLoader.addPart('home');
                     return $translate.refresh();
                 }]
+            },
+            params: {
+                loggedOut : false
             }
         });
 
