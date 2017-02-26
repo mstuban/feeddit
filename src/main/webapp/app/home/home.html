@@ -47,7 +47,7 @@
                 <div ng-show="vm.isAuthenticated() && vm.posts.length > 0" class="table-responsive">
                     <form class="form-inline">
                         <div class="col-xs-2 form-group">
-                            <input type="text" ng-model="search" class="form-control" placeholder="Search">
+                            <input type="text" ng-model="search" class="form-control" placeholder="Search by headline">
                         </div>
                     </form>
                     <table class="jh-table table">
@@ -82,8 +82,8 @@
                             </td>
                             <div>
                                     <td>
-                                        <a ng-click="upVote(post.id)" class="glyphicon glyphicon-hand-up"></a>
-                                        <a ng-click="downVote(post.id)" class="glyphicon glyphicon-hand-down"></a>
+                                        <button ng-disabled="((isUpvoteDisabled(post.id)) || (isDisabled))" ng-click="upVote(post.id)" class="glyphicon glyphicon-hand-up"></button>
+                                        <button ng-click="downVote(post.id)" class="glyphicon glyphicon-hand-down"></button>
                                     </td>
                             </div>
 

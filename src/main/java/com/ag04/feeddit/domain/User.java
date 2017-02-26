@@ -40,7 +40,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     @NotNull
     @Size(min = 60, max = 60)
-    @Column(name = "password_hash",length = 60)
+    @Column(name = "password_hash", length = 60)
     private String password;
 
     @Size(max = 50)
@@ -81,12 +81,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private ZonedDateTime resetDate = null;
 
     @Column(name = "upvoted_posts_ids")
-    @ElementCollection
-    private Set<Long> upvotedPostsIds = new HashSet<>();
+    private HashSet<Long> upvotedPostsIds = new HashSet<>();
 
     @Column(name = "downvoted_posts_ids")
-    @ElementCollection
-    private Set<Long> downvotedPostsIds = new HashSet<>();
+    private HashSet<Long> downvotedPostsIds = new HashSet<>();
 
     @JsonIgnore
     @ManyToMany
@@ -185,11 +183,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     }
 
     public ZonedDateTime getResetDate() {
-       return resetDate;
+        return resetDate;
     }
 
     public void setResetDate(ZonedDateTime resetDate) {
-       this.resetDate = resetDate;
+        this.resetDate = resetDate;
     }
 
     public String getLangKey() {
@@ -216,19 +214,19 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.persistentTokens = persistentTokens;
     }
 
-    public Set<Long> getUpvotedPostsIds() {
+    public HashSet<Long> getUpvotedPostsIds() {
         return upvotedPostsIds;
     }
 
-    public void setUpvotedPostsIds(Set<Long> upvotedPostsIds) {
+    public void setUpvotedPostsIds(HashSet<Long> upvotedPostsIds) {
         this.upvotedPostsIds = upvotedPostsIds;
     }
 
-    public Set<Long> getDownvotedPostsIds() {
+    public HashSet<Long> getDownvotedPostsIds() {
         return downvotedPostsIds;
     }
 
-    public void setDownvotedPostsIds(Set<Long> downvotedPostsIds) {
+    public void setDownvotedPostsIds(HashSet<Long> downvotedPostsIds) {
         this.downvotedPostsIds = downvotedPostsIds;
     }
 

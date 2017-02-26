@@ -16,15 +16,8 @@
         vm.showNoPostsMessage = false;
 
         vm.addToIdArray = function (id) {
-            var inputs = document.querySelectorAll("input[type='checkbox']");
-            for (var i = 0; i < inputs.length; i++) {
-                if (inputs[i].checked) {
-                    vm.isAnyCheckboxSelected = true;
-                }
-                else{
-                    vm.isAnyCheckboxSelected = false;
-                }
-            }
+            console.log("addtoIdArray");
+
             if (vm.idArray.indexOf(id) == -1) {
                 vm.idArray.push(id);
             }
@@ -33,17 +26,31 @@
                 vm.idArray.splice(index, 1);
             }
 
+
+            var inputs = document.querySelectorAll("input[type='checkbox']");
+            if (vm.idArray.length === 0) {
+                vm.isAnyCheckboxSelected = false;
+            }
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].checked) {
+                    vm.isAnyCheckboxSelected = true;
+                }
+            }
+
             console.log(vm.idArray);
 
         };
 
         vm.deletePostsByIdArray = function () {
-            $http.delete("/api/currentUser/posts/" + vm.idArray)
-                .success(function () {
-                    loadAll();
-                })
-                .error(function (status, header) {
-                });
+            var areYouSure = confirm("Are you sure?");
+            if (areYouSure) {
+                $http.delete("/api/currentUser/posts/" + vm.idArray)
+                    .success(function () {
+                        loadAll();
+                    })
+                    .error(function (status, header) {
+                    });
+            }
         };
 
         getAccount();
@@ -73,7 +80,7 @@
         function loadAll() {
             Post.query(function (result) {
                 vm.posts = result;
-                if(vm.posts.length === 0){
+                if (vm.posts.length === 0) {
                     vm.showNoPostsMessage = true;
                 }
                 vm.searchQuery = null;
@@ -83,7 +90,7 @@
         function loadAllForAdmin() {
             PostAdmin.query(function (result) {
                 vm.posts = result;
-                if(vm.posts.length === 0){
+                if (vm.posts.length === 0) {
                     vm.showNoPostsMessage = true;
                 }
                 vm.searchQuery = null;

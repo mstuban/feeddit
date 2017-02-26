@@ -20,7 +20,9 @@
 
     <div class="table-responsive" ng-show="vm.posts.length > 0">
         <td>
-            <button ng-show="vm.isAnyCheckboxSelected" class="btn btn-danger" ng-click="vm.deletePostsByIdArray()">Delete selected</button>
+            <button ng-disabled="!vm.isAnyCheckboxSelected" class="btn btn-danger" ng-click="vm.deletePostsByIdArray()">
+                Delete selected
+            </button>
             <br/>
             <br/>
         </td>

@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * REST controller for managing Post.
@@ -36,9 +34,11 @@ public class PostResource {
 
     private final PostRepository postRepository;
 
-    PostResource(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    private final UserRepository userRepository;
 
+    PostResource(PostRepository postRepository, UserRepository userRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -78,7 +78,11 @@ public class PostResource {
         if (post.getId() == null) {
             return createPost(post);
         }
+
+
         Post result = postRepository.save(post);
+
+
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
             .body(result);
@@ -89,14 +93,43 @@ public class PostResource {
     public ResponseEntity<Post> upVotePost(@PathVariable Long id) throws URISyntaxException {
 
         Post post = postRepository.findOne(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        HashSet<Long> upvotedPostsIds = user.getUpvotedPostsIds();
 
-        post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
+        System.out.println("upvotedPostsIds: " + upvotedPostsIds);
 
-        Post result = postRepository.save(post);
+        boolean postWasUpvoted = false;
 
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
-            .body(result);
+        if (upvotedPostsIds == null) {
+            post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
+            upvotedPostsIds.add(post.getId());
+            user.setUpvotedPostsIds(upvotedPostsIds);
+            userRepository.save(user);
+            Post result = postRepository.save(post);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        }
+
+        for (int i = 0; i < upvotedPostsIds.size(); i++) {
+            if (upvotedPostsIds.contains(post.getId())) {
+                postWasUpvoted = true;
+            }
+        }
+
+        if (postWasUpvoted) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
+            HashSet<Long> newUpvotedPostsIds = upvotedPostsIds;
+            newUpvotedPostsIds.add(post.getId());
+            user.setUpvotedPostsIds(newUpvotedPostsIds);
+            userRepository.save(user);
+            Post result = postRepository.save(post);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @PutMapping("/posts/{id}/downVote")
@@ -126,6 +159,26 @@ public class PostResource {
     public List<Post> getAllUserPosts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return postRepository.findAllByAuthorName(authentication.getName());
+    }
+
+    @GetMapping("currentUser/upVotes")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @Timed
+    public HashSet getUserUpvoteIds() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        return user.getUpvotedPostsIds();
+    }
+
+    @GetMapping("currentUser/downVotes")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @Timed
+    public HashSet getUserdownVoteIds() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        return user.getDownvotedPostsIds();
     }
 
 
