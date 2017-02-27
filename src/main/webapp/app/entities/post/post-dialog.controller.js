@@ -17,18 +17,16 @@
         vm.save = save;
         vm.authorID = null;
         vm.submitDate = new Date();
-
         getAccount();
 
         function getAccount() {
             Principal.identity().then(function (account) {
                 vm.account = account;
+                vm.byUser = vm.account.login;
                 vm.authorID = account.id;
-                vm.authorName = account.login;
                 vm.isAuthenticated = Principal.isAuthenticated;
             });
         }
-
 
         $timeout(function () {
             angular.element('.form-group:eq(1)>input').focus();
@@ -40,11 +38,9 @@
 
         function save() {
             vm.isSaving = true;
-
             vm.post.submitDate = vm.submitDate;
             vm.post.authorID = vm.authorID;
-            vm.post.authorName = vm.authorName;
-
+            vm.post.numberOfUpvotes = 0;
             if (vm.post.id !== null) {
                 Post.update(vm.post, onSaveSuccess, onSaveError);
             } else {
@@ -52,7 +48,7 @@
             }
         }
 
-         function updateUpvotes() {
+        function updateUpvotes() {
             vm.isSaving = true;
 
             vm.post.numberOfUpvotes = vm.numberOfUpvotes;
@@ -63,7 +59,6 @@
                 Post.save(vm.post, onSaveSuccess, onSaveError);
             }
         }
-
 
 
         function onSaveSuccess(result) {

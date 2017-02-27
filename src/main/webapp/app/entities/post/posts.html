@@ -1,48 +1,54 @@
-<div>
-    <h2 data-translate="feedditApp.post.home.title">Posts</h2>
-    <span class="col-md-12 alert alert-danger" ng-show="vm.showNoPostsMessage">
+<div class="row">
+    <div class="text-left col-md-12">
+        <div>
+            <h2 data-translate="feedditApp.post.home.title">Posts</h2>
+            <span class="alert alert-info col-md-12 text-center" ng-show="vm.posts.length == 0">
                 No posts added yet!
-    </span>
-    <!--    <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-4 no-padding-left">
-                    <button class="btn btn-primary" ui-sref="post.new">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        <span data-translate="feedditApp.post.home.createLabel">
-                            Create new Post
-                        </span>
+            </span>
+            <jhi-alert></jhi-alert>
+            <div class="table-responsive" ng-show="vm.posts.length > 0">
+                <table class="jh-table table">
+                    <tbody>
+                    <thead>
+                    <button ng-disabled="!vm.isAnyCheckboxSelected" class="btn btn-danger text-center"
+                            ng-click="vm.deletePostsByIdArray()">
+                        Delete selected
                     </button>
-                </div>
-            </div>
-        </div>-->
-    <br/>
-    <br/>
-
-    <div class="table-responsive" ng-show="vm.posts.length > 0">
-        <td>
-            <button ng-disabled="!vm.isAnyCheckboxSelected" class="btn btn-danger" ng-click="vm.deletePostsByIdArray()">
-                Delete selected
-            </button>
-            <br/>
-            <br/>
-        </td>
-        <table class="jh-table table">
-            <tbody>
-            <tr ng-repeat="post in vm.posts track by post.id">
-
-                <td>{{post.numberOfUpvotes}}</td>
-                <td>
-                    <a href="{{post.postURL}}">{{post.headline}}</a>
                     <br/>
-                    {{post.authorName}}
-                </td>
-                <td>
-                    <input type="checkbox" ng-click="vm.addToIdArray(post.id)">
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-
+                    <br/>
+                    <tr>
+                        <th class="text-center" ng-click="sort('numberOfUpvotes')">Upvotes
+                            <span class="glyphicon sort-icon" ng-show="sortKey=='numberOfUpvotes'"
+                                  ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                        </th>
+                        <th class="text-center" ng-click="sort('headline')">Headline
+                            <span class="glyphicon sort-icon" ng-show="sortKey=='headline'"
+                                  ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                        </th>
+                        <th class="text-center">
+                            Delete
+                        </th>
+                    </tr>
+                    <span class="text-right">
+                </span>
+                    </thead>
+                    <tr dir-paginate="post in vm.posts|orderBy:sortKey:reverse|itemsPerPage:items">
+                        <td class="text-center">{{post.numberOfUpvotes}}</td>
+                        <td class="text-center">
+                            <a href="{{post.postURL}}">{{post.headline}}</a>
+                            <br/>
+                            {{post.authorName}}
+                        </td>
+                        <td class="text-center">
+                            <input type="checkbox" ng-click="vm.addToIdArray(post.id)">
+                        </td>
+                    </tr>
+                </table>
+                <dir-pagination-controls
+                    template-url="bower_components/angularUtils-pagination/dirPagination.tpl.html"
+                    max-size="itemsPerPage">
+                </dir-pagination-controls>
+            </div>
+        </div>
     </div>
 </div>

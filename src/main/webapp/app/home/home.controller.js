@@ -5,28 +5,30 @@
         .module('feedditApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['PostAdmin', '$scope', '$stateParams', 'Principal', 'LoginService', '$state', '$http'];
+    HomeController.$inject = ['PostAdmin', '$scope', '$stateParams', 'Principal', 'LoginService', '$state', '$http', 'AlertService'];
 
-    function HomeController(PostAdmin, $scope, $stateParams, Principal, LoginService, $state, $http) {
+    function HomeController(PostAdmin, $scope, $stateParams, Principal, LoginService, $state, $http, AlertService) {
         var vm = this;
-        $scope.loggedOut = $stateParams.loggedOut;
+
+        if($stateParams.loggedOut){
+            AlertService.success("You have successfully logged out!");
+        }
+
+
         $scope.sort = function (keyname) {
             $scope.sortKey = keyname;   //set the sortKey to the param passed
             $scope.reverse = !$scope.reverse; //if true make it false and vice versa
-        }
+        };
 
         $scope.items = 5;
         vm.account = null;
         vm.isAuthenticated = null;
         vm.login = LoginService.open;
         vm.posts = [];
-        $scope.upVoted = false;
-        $scope.downVoted = false;
         vm.showNoPostsMessage = false;
         $scope.currentUserUpvoteIds = [];
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        var isOneChecked =
-            vm.register = register;
+        $scope.currentUserDownvoteIds = [];
+
         $scope.$on('authenticationSuccess', function () {
             getAccount();
             loadAll();
@@ -49,42 +51,53 @@
         function getAccount() {
             Principal.identity().then(function (account) {
                 vm.account = account;
+                vm.isAuthenticated = Principal.isAuthenticated;
+
                 $http.get("/api/currentUser/upVotes")
                     .success(function (response) {
                         $scope.currentUserUpvoteIds = response;
-                        console.log(response);
                     })
                     .error(function (status, header) {
                     });
-                vm.isAuthenticated = Principal.isAuthenticated;
+
+                $http.get("/api/currentUser/downVotes")
+                    .success(function (response) {
+                        $scope.currentUserDownvoteIds = response;
+                    })
+                    .error(function (status, header) {
+                    });
+
+
             });
-        };
+        }
+
+/*        angular.element(document).ready(function () {
+            console.log("Upvoted initially: " + $scope.currentUserUpvoteIds);
+            console.log("Downvoted initially: " + $scope.currentUserDownvoteIds);
+        });*/
 
         $scope.isUpvoteDisabled = function (id) {
             return $scope.currentUserUpvoteIds.indexOf(id) >= 0;
+
         };
 
+        $scope.isDownvoteDisabled = function (id) {
+            return $scope.currentUserDownvoteIds.indexOf(id) >= 0;
+        };
 
         function register() {
             $state.go('register');
         }
 
-        function login() {
-            collapseNavbar();
-            LoginService.open();
-        }
-
         $scope.upVote = function (id) {
             $http.put("/api/posts/" + id + "/upVote")
-                .success(function (response) {
+                .success(function () {
                     loadAll();
-                    $scope.upVoted = true;
-                    window.setTimeout(function () {
-                        $scope.upVoted = false;
-                        var alertElement = $('.alert');
-                        alertElement.hide();
-                    }, 2000);
-                    $scope.isDisabled = true;
+                    AlertService.success("Post upvoted!");
+                    $scope.currentUserUpvoteIds.push(id);
+                    if ($scope.currentUserDownvoteIds.indexOf(id) > -1) {
+                        $scope.currentUserDownvoteIds.splice($scope.currentUserDownvoteIds.indexOf(id), 1);
+                    }
                 })
                 .error(function (status, header) {
                 });
@@ -92,14 +105,13 @@
 
         $scope.downVote = function (id) {
             $http.put("/api/posts/" + id + "/downVote")
-                .success(function (status, headers) {
+                .success(function () {
                     loadAll();
-                    $scope.downVoted = true;
-                    window.setTimeout(function () {
-                        $scope.downVoted = false;
-                        var alertElement = $('.alert');
-                        alertElement.hide();
-                    }, 2000);
+                    AlertService.success("Post downvoted!");
+                    $scope.currentUserDownvoteIds.push(id);
+                    if ($scope.currentUserUpvoteIds.indexOf(id) > -1) {
+                        $scope.currentUserUpvoteIds.splice($scope.currentUserUpvoteIds.indexOf(id), 1);
+                    }
                 })
                 .error(function (status, header) {
                 });

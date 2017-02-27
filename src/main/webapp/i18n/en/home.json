@@ -22,7 +22,7 @@
             "createLabel": "Create a new Post",
             "createOrEditLabel": "Create or edit a Post"
         },
-        "created": "A new Post is created with identifier {{ param }}",
+        "created": "Post created!",
         "updated": "A Post is updated with identifier {{ param }}",
         "deleted": "A Post is deleted with identifier {{ param }}",
         "delete": {

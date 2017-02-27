@@ -336,6 +336,21 @@ ui bootstrap tweaks
     font-size: 30px;
 }
 
+button[class="glyphicon glyphicon-hand-down"]:disabled {
+    color: #FF5700;
+}
+button[class="glyphicon glyphicon-hand-up"]:disabled {
+    color: #FF5700;
+}
+
+.numberOfUpvotes{
+    font-size: 25px;
+    background-color: darkgray;
+    color: white;
+    padding: 10px;
+    border-radius: 0.3rem;
+    width: 10rem;
+}
 
 
 /* jhipster-needle-css-add-main JHipster will add new css style */

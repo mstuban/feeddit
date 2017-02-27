@@ -91,59 +91,78 @@ public class PostResource {
     @PutMapping("/posts/{id}/upVote")
     @Timed
     public ResponseEntity<Post> upVotePost(@PathVariable Long id) throws URISyntaxException {
-
-        Post post = postRepository.findOne(id);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findOneByLogin(authentication.getName()).get();
         HashSet<Long> upvotedPostsIds = user.getUpvotedPostsIds();
-
-        System.out.println("upvotedPostsIds: " + upvotedPostsIds);
-
-        boolean postWasUpvoted = false;
+        HashSet<Long> downvotedPostsIds = user.getDownvotedPostsIds();
+        Post post = postRepository.findOne(id);
+        Integer upvotes = post.getNumberOfUpvotes();
 
         if (upvotedPostsIds == null) {
-            post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
-            upvotedPostsIds.add(post.getId());
-            user.setUpvotedPostsIds(upvotedPostsIds);
-            userRepository.save(user);
-            Post result = postRepository.save(post);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-
+            upvotedPostsIds = new HashSet<>();
         }
 
-        for (int i = 0; i < upvotedPostsIds.size(); i++) {
-            if (upvotedPostsIds.contains(post.getId())) {
-                postWasUpvoted = true;
-            }
+        if (downvotedPostsIds == null) {
+            downvotedPostsIds = new HashSet<>();
         }
 
-        if (postWasUpvoted) {
+        if (upvotedPostsIds.contains(id)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
-            post.setNumberOfUpvotes(post.getNumberOfUpvotes() + 1);
-            HashSet<Long> newUpvotedPostsIds = upvotedPostsIds;
-            newUpvotedPostsIds.add(post.getId());
-            user.setUpvotedPostsIds(newUpvotedPostsIds);
-            userRepository.save(user);
-            Post result = postRepository.save(post);
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            post.setNumberOfUpvotes(++upvotes);
+            upvotedPostsIds.add(id);
+            user.setUpvotedPostsIds(upvotedPostsIds);
         }
+        if (downvotedPostsIds.contains(id)) {
+            downvotedPostsIds.remove(id);
+            if (post.getNumberOfUpvotes() == 0) {
+                post.setNumberOfUpvotes(++upvotes);
+            }
+            user.setDownvotedPostsIds(downvotedPostsIds);
+        }
+        postRepository.save(post);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/posts/{id}/downVote")
     @Timed
     public ResponseEntity<Post> downVotePost(@PathVariable Long id) throws URISyntaxException {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        HashSet<Long> downvotedPostsIds = user.getDownvotedPostsIds();
+        HashSet<Long> upvotedPostsIds = user.getUpvotedPostsIds();
         Post post = postRepository.findOne(id);
+        Integer upvotes = post.getNumberOfUpvotes();
 
-        post.setNumberOfUpvotes(post.getNumberOfUpvotes() - 1);
+        if (upvotedPostsIds == null) {
+            upvotedPostsIds = new HashSet<>();
+        }
 
-        Post result = postRepository.save(post);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
-            .body(result);
+        if (downvotedPostsIds == null) {
+            downvotedPostsIds = new HashSet<>();
+        }
+
+        if (downvotedPostsIds.contains(id)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else {
+            post.setNumberOfUpvotes(--upvotes);
+            downvotedPostsIds.add(id);
+            user.setDownvotedPostsIds(downvotedPostsIds);
+        }
+        if (upvotedPostsIds.contains(id)) {
+            upvotedPostsIds.remove(id);
+            if (post.getNumberOfUpvotes() == 0) {
+                post.setNumberOfUpvotes(--upvotes);
+            }
+            user.setUpvotedPostsIds(upvotedPostsIds);
+        }
+
+        postRepository.save(post);
+        userRepository.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 
@@ -158,7 +177,8 @@ public class PostResource {
     @Timed
     public List<Post> getAllUserPosts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return postRepository.findAllByAuthorName(authentication.getName());
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        return postRepository.findAllByAuthorID(user.getId());
     }
 
     @GetMapping("currentUser/upVotes")
@@ -229,9 +249,24 @@ public class PostResource {
     @Timed
     public ResponseEntity<Void> deleteUserPostsById(@PathVariable List<Long> idArray) {
 
-        System.out.println(idArray);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
+        HashSet<Long> upvotedIds = user.getUpvotedPostsIds();
+        HashSet<Long> downvotedIds = user.getDownvotedPostsIds();
+
+        for (Long id : idArray) {
+            if (upvotedIds.contains(id)) {
+                upvotedIds.remove(id);
+            }
+            if (downvotedIds.contains(id)) {
+                downvotedIds.remove(id);
+            }
+        }
+
+        user.setUpvotedPostsIds(upvotedIds);
+        user.setDownvotedPostsIds(downvotedIds);
+        userRepository.save(user);
+
 
         List<Post> posts = postRepository.findAll();
 

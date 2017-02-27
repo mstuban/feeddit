@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -13,7 +13,7 @@
             url: '/',
             data: {
                 authorities: [],
-                editedPost : {}
+                editedPost: {}
             },
             views: {
                 'content@': {
@@ -23,23 +23,23 @@
                 }
             },
             resolve: {
-                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate,$translatePartialLoader) {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('home');
                     return $translate.refresh();
                 }]
             },
             params: {
-                loggedOut : false
+                loggedOut: false
             }
         });
 
-    $stateProvider.state('home.new', {
+        $stateProvider.state('home.new', {
             parent: 'app',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
-            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+            onEnter: ['$stateParams', '$state', '$uibModal', function ($stateParams, $state, $uibModal) {
                 $uibModal.open({
                     templateUrl: 'app/entities/post/post-dialog.html',
                     controller: 'PostDialogController',
@@ -59,9 +59,9 @@
                             };
                         }
                     }
-                }).result.then(function() {
-                    $state.go('home', null, { reload: 'home' });
-                }, function() {
+                }).result.then(function () {
+                    $state.go('home', null, {reload: 'home'});
+                }, function () {
                     $state.go('home');
                 });
             }]

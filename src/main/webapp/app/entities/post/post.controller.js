@@ -5,18 +5,22 @@
         .module('feedditApp')
         .controller('PostController', PostController);
 
-    PostController.$inject = ['$http', 'Post', 'PostAdmin', '$state', 'Auth', 'Principal'];
+    PostController.$inject = ['$http', '$scope', 'Post', 'PostAdmin', '$state', 'Principal', 'AlertService'];
 
-    function PostController($http, Post, PostAdmin, $state, Auth, Principal) {
+    function PostController($http, $scope, Post, PostAdmin, $state, Principal, AlertService) {
         var vm = this;
+        $scope.sort = function (keyname) {
+            $scope.sortKey = keyname;
+            $scope.reverse = !$scope.reverse;
+        };
         vm.account = null;
         vm.userID = null;
         vm.idArray = [];
         vm.isAnyCheckboxSelected = false;
         vm.showNoPostsMessage = false;
+        $scope.items = 5;
 
         vm.addToIdArray = function (id) {
-            console.log("addtoIdArray");
 
             if (vm.idArray.indexOf(id) == -1) {
                 vm.idArray.push(id);
@@ -26,6 +30,12 @@
                 vm.idArray.splice(index, 1);
             }
 
+            if(vm.idArray.length == 1){
+                vm.deletedPostMessage = "post";
+            }
+            if(vm.idArray.length > 1){
+                vm.deletedPostMessage = "posts";
+            }
 
             var inputs = document.querySelectorAll("input[type='checkbox']");
             if (vm.idArray.length === 0) {
@@ -37,8 +47,6 @@
                 }
             }
 
-            console.log(vm.idArray);
-
         };
 
         vm.deletePostsByIdArray = function () {
@@ -46,7 +54,15 @@
             if (areYouSure) {
                 $http.delete("/api/currentUser/posts/" + vm.idArray)
                     .success(function () {
-                        loadAll();
+                        if (vm.account.authorities.indexOf("ROLE_ADMIN") >= 0) {
+                            loadAllForAdmin();
+                        }
+                        else {
+                            loadAll();
+                        }
+
+                        AlertService.success("Successfully deleted " + vm.idArray.length + " posts!");
+
                     })
                     .error(function (status, header) {
                     });
@@ -80,9 +96,6 @@
         function loadAll() {
             Post.query(function (result) {
                 vm.posts = result;
-                if (vm.posts.length === 0) {
-                    vm.showNoPostsMessage = true;
-                }
                 vm.searchQuery = null;
             });
         }
@@ -90,11 +103,11 @@
         function loadAllForAdmin() {
             PostAdmin.query(function (result) {
                 vm.posts = result;
-                if (vm.posts.length === 0) {
-                    vm.showNoPostsMessage = true;
-                }
                 vm.searchQuery = null;
             });
         }
+
+        $scope.sortKey = 'numberOfUpvotes';
+        $scope.reverse = true;
     }
 })();

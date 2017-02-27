@@ -11,4 +11,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findAllByAuthorName(String name);
+    List<Post> findAllByAuthorID(Long id);
 }
