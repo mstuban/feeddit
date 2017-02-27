@@ -26,9 +26,9 @@ spring:
         serialization.indent_output: true
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/feeddit
-        username: feeddit
-        password: admin
+        url: postgres://dhmmievsaydkzl:244f47a1b45d0f94c2d2d0a23f9ef28b2f10da88b73acaba23b05ae8a527a289@ec2-54-83-194-208.compute-1.amazonaws.com:5432/dcg7jh42ua40ks
+        username: dhmmievsaydkzl
+        password: 244f47a1b45d0f94c2d2d0a23f9ef28b2f10da88b73acaba23b05ae8a527a289
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
