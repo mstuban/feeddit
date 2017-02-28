@@ -9,7 +9,14 @@ import java.util.List;
  * Spring Data JPA repository for the Post entity.
  */
 @SuppressWarnings("unused")
-public interface PostRepository extends JpaRepository<Post,Long> {
-    List<Post> findAllByAuthorName(String name);
+public interface PostRepository extends JpaRepository<Post, Long> {
+    List<Post> findAllByAuthorNameOrderByIdDesc(String name);
+
+    List<Post> findAllByAuthorIDOrderByIdDesc(Long id);
+
+    List<Post> findAllById(List<Long> idArray);
+
+    List<Post> findAllByAuthorIDAndId(Long id, List<Long> idArray);
+
     List<Post> findAllByAuthorID(Long id);
 }

@@ -19,6 +19,9 @@
             'angular-loading-bar',
             'angularUtils.directives.dirPagination'
         ])
+        .config(function(paginationTemplateProvider) {
+            paginationTemplateProvider.setString('<div class="text-center"><a href="" title="Previous page" ng-class="{ disabled : pagination.current == 1 }" ng-click="setCurrent(pagination.current - 1)"><span class="glyphicon glyphicon-chevron-left"></span></a> <span>Page {{pagination.current}}/{{pagination.last}}</span> <a href="" title="Next page" ng-class="{ disabled : pagination.current == pagination.last }" ng-click="setCurrent(pagination.current + 1)"><span class="glyphicon glyphicon-chevron-right"></a></div>');
+        })
         .run(run);
 
     run.$inject = ['stateHandler', 'translationHandler'];

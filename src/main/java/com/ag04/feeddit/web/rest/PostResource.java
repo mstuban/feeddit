@@ -178,7 +178,7 @@ public class PostResource {
     public List<Post> getAllUserPosts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findOneByLogin(authentication.getName()).get();
-        return postRepository.findAllByAuthorID(user.getId());
+        return postRepository.findAllByAuthorIDOrderByIdDesc(user.getId());
     }
 
     @GetMapping("currentUser/upVotes")
@@ -251,36 +251,32 @@ public class PostResource {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findOneByLogin(authentication.getName()).get();
-        HashSet<Long> upvotedIds = user.getUpvotedPostsIds();
-        HashSet<Long> downvotedIds = user.getDownvotedPostsIds();
+        HashSet<Long> currentUserUpvotedIds = user.getUpvotedPostsIds();
+        HashSet<Long> currentUserDownvotedIds = user.getDownvotedPostsIds();
 
         for (Long id : idArray) {
-            if (upvotedIds.contains(id)) {
-                upvotedIds.remove(id);
-            }
-            if (downvotedIds.contains(id)) {
-                downvotedIds.remove(id);
+            if (currentUserUpvotedIds.contains(id)) {
+                currentUserUpvotedIds.remove(id);
+            } else if (currentUserDownvotedIds.contains(id)) {
+                currentUserDownvotedIds.remove(id);
             }
         }
 
-        user.setUpvotedPostsIds(upvotedIds);
-        user.setDownvotedPostsIds(downvotedIds);
+        user.setUpvotedPostsIds(currentUserDownvotedIds);
+        user.setDownvotedPostsIds(currentUserDownvotedIds);
         userRepository.save(user);
 
-
-        List<Post> posts = postRepository.findAll();
-
-        for (Post post : posts) {
-            for (Long postId : idArray) {
-                if (Objects.equals(post.getId(), postId)) {
-                    Post postToBeDeleted = postRepository.findOne(postId);
-                    if (postToBeDeleted != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
-                        postRepository.delete(postId);
-                    }
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            List<Post> posts = postRepository.findAllById(idArray);
+            posts.forEach(postRepository::delete);
+        } else {
+            List<Post> posts = postRepository.findAllByAuthorID(user.getId());
+            for (Post post : posts) {
+                if (idArray.contains(post.getId())) {
+                    postRepository.delete(post);
                 }
             }
         }
-
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, idArray.toString())).build();
     }

@@ -10,7 +10,7 @@
     function HomeController(PostAdmin, $scope, $stateParams, Principal, LoginService, $state, $http, AlertService) {
         var vm = this;
 
-        if($stateParams.loggedOut){
+        if ($stateParams.loggedOut) {
             AlertService.success("You have successfully logged out!");
         }
 
@@ -71,10 +71,10 @@
             });
         }
 
-/*        angular.element(document).ready(function () {
-            console.log("Upvoted initially: " + $scope.currentUserUpvoteIds);
-            console.log("Downvoted initially: " + $scope.currentUserDownvoteIds);
-        });*/
+        /*        angular.element(document).ready(function () {
+         console.log("Upvoted initially: " + $scope.currentUserUpvoteIds);
+         console.log("Downvoted initially: " + $scope.currentUserDownvoteIds);
+         });*/
 
         $scope.isUpvoteDisabled = function (id) {
             return $scope.currentUserUpvoteIds.indexOf(id) >= 0;
@@ -94,6 +94,9 @@
                 .success(function () {
                     loadAll();
                     AlertService.success("Post upvoted!");
+                    if (!$scope.currentUserUpvoteIds.isArray) {
+                        $scope.currentUserUpvoteIds = [];
+                    }
                     $scope.currentUserUpvoteIds.push(id);
                     if ($scope.currentUserDownvoteIds.indexOf(id) > -1) {
                         $scope.currentUserDownvoteIds.splice($scope.currentUserDownvoteIds.indexOf(id), 1);
@@ -108,6 +111,9 @@
                 .success(function () {
                     loadAll();
                     AlertService.success("Post downvoted!");
+                    if (!$scope.currentUserDownvoteIds.isArray) {
+                        $scope.currentUserDownvoteIds = [];
+                    }
                     $scope.currentUserDownvoteIds.push(id);
                     if ($scope.currentUserUpvoteIds.indexOf(id) > -1) {
                         $scope.currentUserUpvoteIds.splice($scope.currentUserUpvoteIds.indexOf(id), 1);

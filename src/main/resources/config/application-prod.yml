@@ -21,9 +21,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://localhost:5432/feeddit
-        username: feeddit
-        password:
+        url: jdbc:postgresql://ec2-54-83-194-208.compute-1.amazonaws.com:5432/dcg7jh42ua40ks?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+        username: dhmmievsaydkzl
+        password: 244f47a1b45d0f94c2d2d0a23f9ef28b2f10da88b73acaba23b05ae8a527a289
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL
@@ -45,10 +45,10 @@ spring:
         username:
         password:
     thymeleaf:
-        cache: true
+        cache: false
 
 liquibase:
-    contexts: prod
+    contexts: dev
 
 # ===================================================================
 # To enable SSL, generate a certificate using:
@@ -83,23 +83,21 @@ server:
 jhipster:
     http:
         version: V_1_1 # To use HTTP/2 you will need SSL support (see above the "server.ssl" configuration)
-        cache: # Used by the CachingHttpHeadersFilter
-            timeToLiveInDays: 1461
     security:
         remember-me:
             # security key (this key should be unique for your application, and kept secret)
             key: c1fd984b901427f21fcafe3e85249f86a4684575
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: feeddit@localhost
-        base-url: http://my-server-url-to-change # Modify according to your server's URL
+        base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
-        graphite:
+        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
             enabled: false
             host: localhost
             port: 2003
             prefix: feeddit
-        prometheus:
+        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
             enabled: false
             endpoint: /prometheusMetrics
         logs: # Reports Dropwizard metrics in the logs

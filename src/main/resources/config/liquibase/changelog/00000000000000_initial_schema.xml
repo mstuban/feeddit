@@ -1,22 +1,25 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
-    <changeSet author="marko (generated)" id="1488227140999-1">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Nikola (generated)" id="1488304756819-1">
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-2">
+    <changeSet author="Nikola (generated)" id="1488304756819-2">
         <createSequence sequenceName="post_id_seq"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-3">
+    <changeSet author="Nikola (generated)" id="1488304756819-3">
         <createSequence sequenceName="user_id_seq"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-4">
+    <changeSet author="Nikola (generated)" id="1488304756819-4">
         <createTable tableName="jhi_authority">
             <column name="name" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-5">
+    <changeSet author="Nikola (generated)" id="1488304756819-5">
         <createTable tableName="jhi_persistent_audit_event">
             <column autoIncrement="true" name="event_id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
@@ -28,7 +31,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-6">
+    <changeSet author="Nikola (generated)" id="1488304756819-6">
         <createTable tableName="jhi_persistent_audit_evt_data">
             <column name="event_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -39,7 +42,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-7">
+    <changeSet author="Nikola (generated)" id="1488304756819-7">
         <createTable tableName="jhi_persistent_token">
             <column name="series" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -53,7 +56,7 @@
             <column name="user_id" type="BIGINT"/>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-8">
+    <changeSet author="Nikola (generated)" id="1488304756819-8">
         <createTable tableName="jhi_user">
             <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -85,7 +88,7 @@
             <column name="upvoted_posts_ids" type="BYTEA"/>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-9">
+    <changeSet author="Nikola (generated)" id="1488304756819-9">
         <createTable tableName="jhi_user_authority">
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -95,7 +98,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-10">
+    <changeSet author="Nikola (generated)" id="1488304756819-10">
         <createTable tableName="post">
             <column name="id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -108,41 +111,53 @@
             <column name="submit_date" type="date"/>
         </createTable>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-11">
+    <changeSet author="Nikola (generated)" id="1488304756819-11">
         <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-12">
+    <changeSet author="Nikola (generated)" id="1488304756819-12">
         <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-13">
+    <changeSet author="Nikola (generated)" id="1488304756819-13">
         <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-14">
+    <changeSet author="Nikola (generated)" id="1488304756819-14">
         <addPrimaryKey columnNames="series" constraintName="jhi_persistent_tokenPK" tableName="jhi_persistent_token"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-15">
+    <changeSet author="Nikola (generated)" id="1488304756819-15">
         <addPrimaryKey columnNames="id" constraintName="jhi_userPK" tableName="jhi_user"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-16">
+    <changeSet author="Nikola (generated)" id="1488304756819-16">
         <addPrimaryKey columnNames="id" constraintName="postPK" tableName="post"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-17">
+    <changeSet author="Nikola (generated)" id="1488304756819-17">
         <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-18">
+    <changeSet author="Nikola (generated)" id="1488304756819-18">
         <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-19">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    <changeSet author="Nikola (generated)" id="1488304756819-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority"
+                                 constraintName="FK290okww5jujghp4el5i7mgwu0" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-20">
-        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event"/>
+    <changeSet author="Nikola (generated)" id="1488304756819-20">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data"
+                                 constraintName="FK2ehnyx2si4tjd2nt4q7y40v8m" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="event_id"
+                                 referencedTableName="jhi_persistent_audit_event"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-21">
-        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority"/>
+    <changeSet author="Nikola (generated)" id="1488304756819-21">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority"
+                                 constraintName="FK4psxl0jtx6nr7rhqbynr6itoc" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="name"
+                                 referencedTableName="jhi_authority"/>
     </changeSet>
-    <changeSet author="marko (generated)" id="1488227140999-22">
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_persistent_token" constraintName="FKmogh0vmv89yg5kofe6n3t77ud" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    <changeSet author="Nikola (generated)" id="1488304756819-22">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_persistent_token"
+                                 constraintName="FKmogh0vmv89yg5kofe6n3t77ud" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="Nikola (generated)" id="1488304756819-23">
         <loadData encoding="UTF-8"
                   file="config/liquibase/users.csv"
                   separator=";"
