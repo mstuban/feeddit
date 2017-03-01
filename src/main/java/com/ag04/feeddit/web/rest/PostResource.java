@@ -255,9 +255,9 @@ public class PostResource {
         HashSet<Long> currentUserDownvotedIds = user.getDownvotedPostsIds();
 
         for (Long id : idArray) {
-            if (currentUserUpvotedIds.contains(id)) {
+            if (currentUserUpvotedIds != null && currentUserUpvotedIds.contains(id)) {
                 currentUserUpvotedIds.remove(id);
-            } else if (currentUserDownvotedIds.contains(id)) {
+            } else if (currentUserDownvotedIds != null && currentUserDownvotedIds.contains(id)) {
                 currentUserDownvotedIds.remove(id);
             }
         }
@@ -267,8 +267,15 @@ public class PostResource {
         userRepository.save(user);
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            List<Post> posts = postRepository.findAllById(idArray);
-            posts.forEach(postRepository::delete);
+
+
+            for (Post post : postRepository.findAll()) {
+                for (Long id : idArray) {
+                    if (id.equals(post.getId())) {
+                        postRepository.delete(post);
+                    }
+                }
+            }
         } else {
             List<Post> posts = postRepository.findAllByAuthorID(user.getId());
             for (Post post : posts) {

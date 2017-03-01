@@ -14,7 +14,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByAuthorIDOrderByIdDesc(Long id);
 
-    List<Post> findAllById(List<Long> idArray);
+/*
+    List<Post> findAllByIdArray(List<Long> idArray);
+*/
 
     List<Post> findAllByAuthorIDAndId(Long id, List<Long> idArray);
 
