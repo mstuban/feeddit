@@ -21,9 +21,9 @@ spring:
             enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:postgresql://ec2-54-83-194-208.compute-1.amazonaws.com:5432/dcg7jh42ua40ks?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
-        username: dhmmievsaydkzl
-        password: 244f47a1b45d0f94c2d2d0a23f9ef28b2f10da88b73acaba23b05ae8a527a289
+        url: jdbc:postgresql://localhost:5432/feeddit
+        username: feeddit
+        password: admin
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
         database: POSTGRESQL

@@ -32,6 +32,7 @@
     "languages": [
       "en",
       "de"
-    ]
+    ],
+    "herokuAppName": "cryptic-headland-32150"
   }
 }

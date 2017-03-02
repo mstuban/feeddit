@@ -2,27 +2,11 @@
     <div class="row">
         <div class="text-center col-md-12">
             <h1 ng-hide="vm.isAuthenticated()" data-translate="home.title">Welcome to feeddit!</h1>
-
-<!--            <alert ng-if="loggedOut" class="col-md-12 alert alert-success" dismiss-on-timeout="2000">
-                You have successfully logged out!
-            </alert>-->
-
-            <!--      <alert ng-if="downVoted" class="col-md-12 alert alert-success" dismiss-on-timeout="2000"
-                         class="alert alert-success">
-                      Post downvoted!
-                  </alert>-->
-
-            <jhi-alert></jhi-alert>
-
-            <!--   <alert ng-if="upVoted" class="col-md-12 alert alert-success" dismiss-on-timeout="2000"
-                      class="alert alert-success">
-                   Post upvoted!
-               </alert>-->
-
             <div ng-switch="vm.isAuthenticated()">
                 <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.register"
                      translate-compile>
-                    You don't have an account yet? <a class="alert-link" ng-click="register()">Register a new account</a>
+                    You don't have an account yet? <a class="alert-link" ng-click="register()">Register a new
+                    account</a>
                 </div>
             </div>
 
@@ -93,29 +77,6 @@
                                             ng-click="downVote(post.id)" class="glyphicon glyphicon-hand-down"></button>
                                 </td>
                             </div>
-
-                            <!--<td class="text-right">
-                                <div class="btn-group flex-btn-group-container">
-                                    <button type="submit"
-                                            ui-sref="post-detail({id:post.id})"
-                                            class="btn btn-info btn-sm">
-                                        <span class="glyphicon glyphicon-eye-open"></span>
-                                        <span class="hidden-sm-down" data-translate="entity.action.view"></span>
-                                    </button>
-                                    <button type="submit"
-                                            ui-sref="post.edit({id:post.id})"
-                                            class="btn btn-primary btn-sm">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                        <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
-                                    </button>
-                                    <button type="submit"
-                                            ui-sref="post.delete({id:post.id})"
-                                            class="btn btn-danger btn-sm">
-                                        <span class="glyphicon glyphicon-remove-circle"></span>
-                                        <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
-                                    </button>
-                                </div>
-                            </td>-->
                         </tr>
                         </tbody>
                     </table>
@@ -126,12 +87,6 @@
                 <span class="col-md-12 alert alert-info" ng-show="vm.showNoPostsMessage">
                 No posts added yet!
             </span>
-                <!--  <div class="form-group">
-                      <label class="control-label" data-translate="feedditApp.post.numberOfUpvotes" for="field_numberOfUpvotes">Number Of Upvotes</label>
-                      <input type="number" class="form-control" name="numberOfUpvotes" id="field_numberOfUpvotes"
-                             ng-model="vm.post.numberOfUpvotes"
-                      />
-                  </div>-->
             </div>
         </div>
     </div>

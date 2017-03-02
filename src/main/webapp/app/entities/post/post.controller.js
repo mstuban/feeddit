@@ -17,10 +17,52 @@
         vm.userID = null;
         vm.idArray = [];
         vm.isAnyCheckboxSelected = false;
-        vm.showNoPostsMessage = false;
         $scope.items = 5;
+        $scope.toggle = true;
+
+        $scope.$watch('toggle', function () {
+            $scope.toggle ? (vm.deselectAllCheckboxes(), $scope.selectAllButtonText = "Select all") : (vm.selectAllCheckboxes(), $scope.selectAllButtonText = "Deselect all");
+        });
+
+        loadAll();
+
+        vm.selectAllCheckboxes = function () {
+            var inputs = document.querySelectorAll("input[type='checkbox']");
+
+            angular.forEach(vm.posts, function (post, i) {
+                inputs[i].checked = true;
+                vm.idArray.push(post.id);
+            });
+
+            vm.isAnyCheckboxSelected = true;
+        };
+
+        vm.deselectAllCheckboxes = function () {
+            var inputs = document.querySelectorAll("input[type='checkbox']");
+
+            angular.forEach(inputs, function (input, i) {
+                input.checked = false;
+            });
+            vm.idArray = [];
+            vm.isAnyCheckboxSelected = false;
+        };
 
         vm.addToIdArray = function (id) {
+            var inputs = document.querySelectorAll("input[type='checkbox']");
+            var areAllChecked = false;
+
+            angular.forEach(inputs, function (input) {
+                if (input.checked) {
+                    areAllChecked = true;
+                } else {
+                    areAllChecked = false;
+                }
+            });
+
+            if(areAllChecked){
+                $scope.selectAllButtonText = "Deselect all"
+                $scope.toggle = vm.deselectAllCheckboxes();
+            }
 
             if (vm.idArray.indexOf(id) == -1) {
                 vm.idArray.push(id);
@@ -28,13 +70,6 @@
             else {
                 var index = vm.idArray.indexOf(id);
                 vm.idArray.splice(index, 1);
-            }
-
-            if(vm.idArray.length == 1){
-                vm.deletedPostMessage = "post";
-            }
-            if(vm.idArray.length > 1){
-                vm.deletedPostMessage = "posts";
             }
 
             var inputs = document.querySelectorAll("input[type='checkbox']");

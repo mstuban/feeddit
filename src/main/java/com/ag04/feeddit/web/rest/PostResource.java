@@ -96,7 +96,7 @@ public class PostResource {
         HashSet<Long> upvotedPostsIds = user.getUpvotedPostsIds();
         HashSet<Long> downvotedPostsIds = user.getDownvotedPostsIds();
         Post post = postRepository.findOne(id);
-        Integer upvotes = post.getNumberOfUpvotes();
+        Integer postUpvotes = post.getNumberOfUpvotes();
 
         if (upvotedPostsIds == null) {
             upvotedPostsIds = new HashSet<>();
@@ -109,14 +109,14 @@ public class PostResource {
         if (upvotedPostsIds.contains(id)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else {
-            post.setNumberOfUpvotes(++upvotes);
+            post.setNumberOfUpvotes(++postUpvotes);
             upvotedPostsIds.add(id);
             user.setUpvotedPostsIds(upvotedPostsIds);
         }
         if (downvotedPostsIds.contains(id)) {
             downvotedPostsIds.remove(id);
             if (post.getNumberOfUpvotes() == 0) {
-                post.setNumberOfUpvotes(++upvotes);
+                post.setNumberOfUpvotes(++postUpvotes);
             }
             user.setDownvotedPostsIds(downvotedPostsIds);
         }
@@ -209,8 +209,9 @@ public class PostResource {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post post = postRepository.findOne(id);
+        User user = userRepository.findOneByLogin(authentication.getName()).get();
 
-        if (post != null && (authentication.getName().equals(post.getAuthorName()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+        if (post != null && (post.getAuthorID().equals(user.getId()) || authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
             return ResponseUtil.wrapOrNotFound(Optional.of(post));
         }
 

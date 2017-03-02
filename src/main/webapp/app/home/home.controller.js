@@ -14,7 +14,6 @@
             AlertService.success("You have successfully logged out!");
         }
 
-
         $scope.sort = function (keyname) {
             $scope.sortKey = keyname;   //set the sortKey to the param passed
             $scope.reverse = !$scope.reverse; //if true make it false and vice versa
@@ -70,20 +69,6 @@
 
             });
         }
-
-        /*        angular.element(document).ready(function () {
-         console.log("Upvoted initially: " + $scope.currentUserUpvoteIds);
-         console.log("Downvoted initially: " + $scope.currentUserDownvoteIds);
-         });*/
-
-        $scope.isUpvoteDisabled = function (id) {
-            return $scope.currentUserUpvoteIds.indexOf(id) >= 0;
-
-        };
-
-        $scope.isDownvoteDisabled = function (id) {
-            return $scope.currentUserDownvoteIds.indexOf(id) >= 0;
-        };
 
         function register() {
             $state.go('register');
